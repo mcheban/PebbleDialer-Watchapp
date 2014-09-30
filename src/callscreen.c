@@ -28,7 +28,7 @@ bool nameExist;
 
 bool busy;
 
-char callerNameText[21];
+char callerNameText[62];
 char callerNumTypeText[21];
 char callerNumberText[21];
 
@@ -183,8 +183,10 @@ void callscreen_received_data(uint8_t id, DictionaryIterator *received) {
 		strcpy(callerNumberText, dict_find(received, 3)->value->cstring);
 		if (nameExist)
 		{
-			strcpy(callerNameText, dict_find(received, 1)->value->cstring);
+			strncpy(callerNameText, dict_find(received, 1)->value->cstring, sizeof(callerNameText));
 			strcpy(callerNumTypeText, dict_find(received, 2)->value->cstring);
+			APP_LOG(APP_LOG_LEVEL_INFO, callerNameText);
+			APP_LOG(APP_LOG_LEVEL_INFO, "Name length: %d", (int) strlen(callerNameText));
 		}
 
 		if (callEstablished)
@@ -265,6 +267,7 @@ void callscreen_init()
 	callerName = text_layer_create(GRect(5,40,144 - 30,60));
 	text_layer_set_font(callerName, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
 	text_layer_set_text_alignment(callerName, GTextAlignmentCenter);
+	text_layer_set_overflow_mode(callerName, GTextOverflowModeWordWrap);
 	layer_add_child(topLayer, (Layer *)callerName);
 
 	callerNumType = text_layer_create(GRect(5,100,144 - 30,20));

@@ -13,7 +13,7 @@ int16_t centerIndex = 0;
 int16_t pickedContact = -1;
 
 bool sending = false;
-char cw_contactNames[21][21] = {};
+char cw_contactNames[21][82] = {};
 
 MenuLayer* contactsMenuLayer;
 
@@ -47,7 +47,7 @@ void cw_setContactName(uint16_t index, char *name)
 	if (arrayPos < 0)
 		return;
 
-	strcpy(cw_contactNames[arrayPos],name);
+	strncpy(cw_contactNames[arrayPos],name,sizeof(cw_contactNames[arrayPos]));
 }
 
 void cw_shiftContactArray(int newIndex)
@@ -198,6 +198,7 @@ void cw_menu_pos_changed(struct MenuLayer *menu_layer, MenuIndex new_index, Menu
 
 void cw_menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 	graphics_context_set_text_color(ctx, GColorBlack);
+	int name_h = 23;
 
 //	if (cell_index->row == 0)
 //	{
@@ -213,7 +214,7 @@ void cw_menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex
 //			graphics_text_draw(ctx, itoa(centerIndex), fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD), GRect(3, 3, 141, 23), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
 //		}
 //	else
-		graphics_draw_text(ctx, cw_getContactName(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD), GRect(3, 3, 141, 23), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+		graphics_draw_text(ctx, cw_getContactName(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), GRect(3, 3, 141, name_h), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
 }
 
 

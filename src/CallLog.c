@@ -14,7 +14,7 @@ int16_t pickedEntry = -1;
 uint8_t pickedMode = 0;
 
 bool cl_sending = false;
-char cl_names[21][21] = {};
+char cl_names[21][62] = {};
 char cl_dates[21][21] = {};
 uint8_t cl_types[21] = {};
 char cl_numbers[21][21] = {};
@@ -56,7 +56,7 @@ void cl_setName(uint16_t index, char *name)
 	if (arrayPos < 0)
 		return;
 
-	strcpy(cl_names[arrayPos],name);
+	strncpy(cl_names[arrayPos],name, sizeof(cl_names[arrayPos]));
 }
 
 char* cl_getDate(uint16_t index)
@@ -252,7 +252,7 @@ uint16_t cl_menu_get_num_rows_callback(MenuLayer *me, uint16_t section_index, vo
 
 
 int16_t cl_menu_get_row_height_callback(MenuLayer *me,  MenuIndex *cell_index, void *data) {
-	return (strlen(cl_getNumber(cell_index->row)) == 0 ? 40 : 55);
+	return (strlen(cl_getNumber(cell_index->row)) == 0 ? 40 : 60);
 }
 
 void cl_menu_pos_changed(struct MenuLayer *menu_layer, MenuIndex new_index, MenuIndex old_index, void *callback_context)
@@ -267,10 +267,15 @@ void cl_menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex
 
 	graphics_context_set_text_color(ctx, GColorBlack);
 
-	graphics_draw_text(ctx, cl_getName(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD), GRect(35, 0, 144 - 30, 20), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
-	graphics_draw_text(ctx, cl_getDate(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_14), GRect(35, 20, 144 - 30, 15), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+	int name_h = 25;
+	int date_y = name_h;
+	int date_h = 15;
+	int num_y = date_y + date_h;
+
+	graphics_draw_text(ctx, cl_getName(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), GRect(35, 0, 144 - 30, name_h), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
+	graphics_draw_text(ctx, cl_getDate(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_14), GRect(35, date_y, 144 - 30, date_h), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
 	if (hasNumberType)
-		graphics_draw_text(ctx, cl_getNumber(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), GRect(35, 35, 144 - 30, 20), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+		graphics_draw_text(ctx, cl_getNumber(cell_index->row), fonts_get_system_font(FONT_KEY_GOTHIC_14), GRect(35, num_y, 144 - 30, 15), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
 
 	GBitmap* image;
 	switch (cl_getType(cell_index->row))

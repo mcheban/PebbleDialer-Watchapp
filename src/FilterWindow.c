@@ -7,7 +7,7 @@ Window* filterWindow;
 
 int numOfContacts = 0;
 
-char contactNames[7][21] = {};
+char contactNames[7][62] = {};
 
 TextLayer* filterLoadingLayer;
 MenuLayer* filterMenuLayer;
@@ -31,7 +31,7 @@ int16_t menu_get_row_height_callback(MenuLayer *me,  MenuIndex *cell_index, void
 
 void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 	graphics_context_set_text_color(ctx, GColorBlack);
-	graphics_draw_text(ctx, contactNames[cell_index->row], fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD), GRect(3, 3, 141, 23), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
+	graphics_draw_text(ctx, contactNames[cell_index->row], fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), GRect(3, 3, 141, 23), GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
 }
 
 
@@ -84,7 +84,7 @@ void filter_receivedContactNames(DictionaryIterator* data)
 		if (groupPos >= numOfContacts)
 			break;
 
-		strcpy(contactNames[groupPos], dict_find(data, 3 + i)->value->cstring);
+		strncpy(contactNames[groupPos], dict_find(data, 3 + i)->value->cstring, sizeof(contactNames[groupPos]));
 	}
 	filter_requestContacts(offset + 3);
 
